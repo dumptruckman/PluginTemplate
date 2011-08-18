@@ -22,6 +22,7 @@
 package com.dumptruckman.plugintemplate;
 
 import com.dumptruckman.plugintemplate.config.PluginConfig;
+import com.dumptruckman.plugintemplate.locale.PluginLanguage;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -59,6 +60,15 @@ public class TemplatePlugin extends JavaPlugin {
             return;
         }
 
+        // Loads the language
+        try {
+            PluginLanguage.load(this);
+        } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
+            log.severe(nameVersion + "Encountered an error while loading the language file.  Disabling...");
+            pm.disablePlugin(this);
+            return;
+        }
+
         // Register Events
         registerEvents(pm);
 
@@ -68,6 +78,7 @@ public class TemplatePlugin extends JavaPlugin {
 
     /**
      * Gets the logger associated with this plugin
+     *
      * @return The logger associated with this plugin
      */
     final public Logger getLog() {
