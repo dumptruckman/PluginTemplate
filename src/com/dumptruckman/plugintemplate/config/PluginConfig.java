@@ -76,7 +76,19 @@ public class PluginConfig {
         }
     }
 
+    /**
+     * Retrieves the language file name for this plugin
+     * @return Language file name
+     */
     public static String getLanguageFileName() {
         return config.getString(LANGUAGE.getPath());
+    }
+
+    /**
+     * Retrieves the period at which to save the data file in seconds
+     * @return Period to save data file
+     */
+    public static int getDataSavePeriod() {
+        return config.getInt(DATA_SAVE_PERIOD.getPath(), (Integer)DATA_SAVE_PERIOD.getDefault());
     }
 }

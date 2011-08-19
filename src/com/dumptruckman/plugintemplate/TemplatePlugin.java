@@ -22,6 +22,7 @@
 package com.dumptruckman.plugintemplate;
 
 import com.dumptruckman.plugintemplate.config.PluginConfig;
+import com.dumptruckman.plugintemplate.data.PluginData;
 import com.dumptruckman.plugintemplate.locale.PluginLanguage;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -39,6 +40,10 @@ public class TemplatePlugin extends JavaPlugin {
     private static String nameVersion = "";
 
     final public void onDisable() {
+        // Save the plugin data
+        PluginData.save(true);
+
+        // Display disable message/version info
         log.info(nameVersion + "disabled.");
     }
 
@@ -65,6 +70,15 @@ public class TemplatePlugin extends JavaPlugin {
             PluginLanguage.load(this);
         } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
             log.severe(nameVersion + "Encountered an error while loading the language file.  Disabling...");
+            pm.disablePlugin(this);
+            return;
+        }
+
+        // Loads the data
+        try {
+            PluginData.load(this);
+        } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
+            log.severe(nameVersion + "Encountered an error while loading the data file.  Disabling...");
             pm.disablePlugin(this);
             return;
         }

@@ -19,24 +19,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.dumptruckman.plugintemplate.config;
+package com.dumptruckman.plugintemplate.data;
 
 /**
  * @author dumptruckman
  */
-public enum ConfigPath {
-    LANGUAGE("settings.language_file", "english.yml", "# This is the language file you wish to use."),
-    DATA_SAVE_PERIOD("settings.data.save_every", 30, "# This is often plugin data is written to the disk."),
+public enum DataPath {
+
     ;
 
     private String path;
-    private Object def;
-    private String[] comments;
 
-    ConfigPath(String path, Object def, String...comments) {
+    DataPath(String path) {
         this.path = path;
-        this.def = def;
-        this.comments = comments;
     }
 
     /**
@@ -45,27 +40,5 @@ public enum ConfigPath {
      */
     public String getPath() {
         return path;
-    }
-
-    /**
-     * Retrieves the default value for a config path
-     * @return The default value for a config path
-     */
-    public Object getDefault() {
-        return def;
-    }
-
-    /**
-     * Retrieves the comment for a config path
-     * @return The comments for a config path
-     */
-    public String[] getComments() {
-        if (comments != null) {
-            return comments;
-        }
-
-        String[] comments = new String[1];
-        comments[0] = "";
-        return comments;
     }
 }
