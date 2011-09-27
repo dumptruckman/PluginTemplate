@@ -1,30 +1,10 @@
-/*
- * Copyright (c) 2011. dumptruckman
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this
- * software and associated documentation files (the "Software"), to deal in the Software
- * without restriction, including without limitation the rights to use, copy, modify,
- * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be included in all copies
- * or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
- * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package com.dumptruckman.plugintemplate;
 
-import com.dumptruckman.plugintemplate.config.PluginConfig;
-import com.dumptruckman.plugintemplate.data.PluginData;
-import com.dumptruckman.plugintemplate.locale.PluginLanguage;
-import org.bukkit.plugin.PluginDescriptionFile;
+import com.dumptruckman.plugintemplate.config.Config;
+import com.dumptruckman.plugintemplate.data.Data;
+import com.dumptruckman.plugintemplate.locale.Language;
+import com.dumptruckman.plugintemplate.util.Logging;
+import org.blockface.bukkitstats.CallHome;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,57 +17,59 @@ import java.util.logging.Logger;
 public class TemplatePlugin extends JavaPlugin {
 
     final private static Logger log = Logger.getLogger("Minecraft.PluginTemplate");
-    private static String nameVersion = "";
+
+    private static TemplatePlugin instance = null;
 
     final public void onDisable() {
         // Save the plugin data
-        PluginData.save(true);
+        Data.save(true);
 
         // Display disable message/version info
-        log.info(nameVersion + "disabled.");
+        Logging.info("disabled.", true);
     }
 
     final public void onEnable() {
+        // Store the instance of this plugin
+        instance = this;
+
         // Grab the PluginManager
         final PluginManager pm = getServer().getPluginManager();
 
-        // Grab the Plugin Description File
-        PluginDescriptionFile pdf = getDescription();
-        // Create a name and version string
-        nameVersion = pdf.getName() + " " + pdf.getVersion() + " ";
-
         // Loads the configuration
         try {
-            PluginConfig.load(this);
+            Config.load();
         } catch (IOException e) {  // Catch errors loading the config file and exit out if found.
-            log.severe(nameVersion + "Encountered an error while loading the configuration file.  Disabling...");
+            Logging.severe("Encountered an error while loading the configuration file.  Disabling...");
             pm.disablePlugin(this);
             return;
         }
 
         // Loads the language
         try {
-            PluginLanguage.load(this);
+            Language.load();
         } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
-            log.severe(nameVersion + "Encountered an error while loading the language file.  Disabling...");
+            Logging.severe("Encountered an error while loading the language file.  Disabling...");
             pm.disablePlugin(this);
             return;
         }
 
         // Loads the data
         try {
-            PluginData.load(this);
+            Data.load();
         } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
-            log.severe(nameVersion + "Encountered an error while loading the data file.  Disabling...");
+            Logging.severe("Encountered an error while loading the data file.  Disabling...");
             pm.disablePlugin(this);
             return;
         }
 
         // Register Events
-        registerEvents(pm);
+        registerEvents();
+
+        //Call Home (usage stats)
+        CallHome.load(this);
 
         // Display enable message/version info
-        log.info(nameVersion + "enabled.");
+        Logging.info("enabled.", true);
     }
 
     /**
@@ -99,7 +81,12 @@ public class TemplatePlugin extends JavaPlugin {
         return log;
     }
 
-    final public void registerEvents(PluginManager pm) {
+    final public void registerEvents() {
+        final PluginManager pm = getServer().getPluginManager();
         // Event registering goes here
+    }
+
+    public static TemplatePlugin getInstance() {
+        return instance;
     }
 }

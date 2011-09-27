@@ -35,6 +35,6 @@ public class DataSaveTimer implements Runnable {
     }
 
     public void run() {
-        PluginData.save(false);
+        Data.save(false);
     }
 }
