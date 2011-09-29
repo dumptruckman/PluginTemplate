@@ -16,8 +16,6 @@ import java.util.logging.Logger;
  */
 public class TemplatePlugin extends JavaPlugin {
 
-    final private static Logger log = Logger.getLogger("Minecraft.PluginTemplate");
-
     private static TemplatePlugin instance = null;
 
     final public void onDisable() {
@@ -70,15 +68,6 @@ public class TemplatePlugin extends JavaPlugin {
 
         // Display enable message/version info
         Logging.info("enabled.", true);
-    }
-
-    /**
-     * Gets the logger associated with this plugin
-     *
-     * @return The logger associated with this plugin
-     */
-    final public Logger getLog() {
-        return log;
     }
 
     final public void registerEvents() {
