@@ -3,6 +3,7 @@ package com.dumptruckman.plugintemplate.locale;
 import com.dumptruckman.plugintemplate.TemplatePlugin;
 import com.dumptruckman.plugintemplate.config.Config;
 import com.dumptruckman.plugintemplate.util.Logging;
+import com.dumptruckman.plugintemplate.util.PluginTools;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.config.Configuration;
@@ -45,9 +46,11 @@ public enum Language {
      * @throws java.io.IOException
      */
     public static void load() throws IOException {
-
         // Make the data folders
         TemplatePlugin.getInstance().getDataFolder().mkdirs();
+
+        // Extract the default language file
+        PluginTools.extractFromJar("english.yml");
 
         // Check if the language file exists.  If not, create it.
         File languageFile = new File(TemplatePlugin.getInstance().getDataFolder(), Config.LANGUAGE_FILE_NAME.getString());
