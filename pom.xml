@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dumptruckman.plugintemplate</groupId>
     <artifactId>PluginTemplate</artifactId>
-    <version>4</version>
+    <version>X</version>
     <name>PluginTemplate</name>
   <repositories>
     <repository>
