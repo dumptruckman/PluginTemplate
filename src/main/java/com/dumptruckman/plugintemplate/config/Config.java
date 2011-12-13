@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author dumptruckman, SwearWord
+ * @author dumptruckman
  */
 public enum Config {
     LANGUAGE_FILE_NAME("settings.language_file", "english.yml", "# This is the language file you wish to use."),
@@ -25,15 +25,15 @@ public enum Config {
     }
 
     public final Boolean getBoolean() {
-        return config.getBoolean(path, (Boolean)def);
+        return config.getConfig().getBoolean(path, (Boolean)def);
     }
 
     public final Integer getInt() {
-        return config.getInt(path, (Integer)def);
+        return config.getConfig().getInt(path, (Integer)def);
     }
 
     public final String getString() {
-        return config.getString(path, (String)def);
+        return config.getConfig().getString(path, (String)def);
     }
 
     /**
@@ -83,7 +83,7 @@ public enum Config {
         }
 
         // Load the configuration file into memory
-        config = new CommentedConfiguration(new File(TemplatePlugin.getInstance().getDataFolder(), "config.yml"));
+        config = new CommentedConfiguration(configFile);
         config.load();
 
         // Sets defaults config values
@@ -99,8 +99,8 @@ public enum Config {
     private static void setDefaults() {
         for (Config path : Config.values()) {
             config.addComment(path.getPath(), path.getComments());
-            if (config.getString(path.getPath()) == null) {
-                config.setProperty(path.getPath(), path.getDefault());
+            if (config.getConfig().getString(path.getPath()) == null) {
+                config.getConfig().set(path.getPath(), path.getDefault());
             }
         }
     }
