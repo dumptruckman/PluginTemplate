@@ -1,81 +1,140 @@
 package com.dumptruckman.plugintemplate;
 
+import com.dumptruckman.plugintemplate.config.CommentedConfig;
 import com.dumptruckman.plugintemplate.config.Config;
 import com.dumptruckman.plugintemplate.data.Data;
-import com.dumptruckman.plugintemplate.locale.Language;
+import com.dumptruckman.plugintemplate.data.YamlData;
+import com.dumptruckman.plugintemplate.locale.Messager;
+import com.dumptruckman.plugintemplate.locale.Messaging;
+import com.dumptruckman.plugintemplate.locale.SimpleMessager;
+import com.dumptruckman.plugintemplate.permission.Perm;
 import com.dumptruckman.plugintemplate.util.Logging;
-import org.blockface.bukkitstats.CallHome;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.Locale;
 
 /**
  * @author dumptruckman
  */
-public class TemplatePlugin extends JavaPlugin {
+public class TemplatePlugin extends JavaPlugin implements Messaging {
 
-    private static TemplatePlugin instance = null;
+    private Config config = null;
+    private Data data = null;
+    private Messager messager = new SimpleMessager(this);
 
-    final public void onDisable() {
-        // Save the plugin data
-        Data.save(true);
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void onDisable() {
         // Display disable message/version info
         Logging.info("disabled.", true);
     }
 
-    final public void onEnable() {
-        // Store the instance of this plugin
-        instance = this;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final void onEnable() {
+        Logging.init(this);
+        Perm.register(this);
 
-        // Grab the PluginManager
-        final PluginManager pm = getServer().getPluginManager();
-
-        // Loads the configuration
         try {
-            Config.load();
-        } catch (IOException e) {  // Catch errors loading the config file and exit out if found.
-            Logging.severe("Encountered an error while loading the configuration file.  Disabling...");
-            pm.disablePlugin(this);
+            this.getMessager().setLocale(new Locale(this.getSettings().getLocale()));
+        } catch (IllegalArgumentException e) {
+            Logging.severe(e.getMessage());
+            this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
-        // Loads the language
-        try {
-            Language.load();
-        } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
-            Logging.severe("Encountered an error while loading the language file.  Disabling...");
-            pm.disablePlugin(this);
-            return;
-        }
-
-        // Loads the data
-        try {
-            Data.load();
-        } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
-            Logging.severe("Encountered an error while loading the data file.  Disabling...");
-            pm.disablePlugin(this);
-            return;
-        }
+        this.reloadConfig();
 
         // Register Events
-        registerEvents();
+        this.registerEvents();
 
-        //Call Home (usage stats)
-        CallHome.load(this);
+        // Register Commands
+        this.registerCommands();
 
         // Display enable message/version info
         Logging.info("enabled.", true);
     }
 
-    final public void registerEvents() {
-        final PluginManager pm = getServer().getPluginManager();
-        // Event registering goes here
+    /**
+     * Nulls the config object and reloads a new one.
+     */
+    public void reloadConfig() {
+        this.config = null;
+        // Set debug mode from config
+        Logging.setDebugMode(this.getSettings().isDebugging());
+        // Create initial World Group for first run IF NO GROUPS EXIST
+        if (this.getSettings().isFirstRun()) {
+            Logging.info("First run!");
+        }
     }
 
-    public static TemplatePlugin getInstance() {
-        return instance;
+    private void registerEvents() {
+        Bukkit.getPluginManager().registerEvents(new PluginListener(this), this);
+    }
+
+    private void registerCommands() {
+        // Command registering goes here.
+    }
+
+    /**
+     * @return the MVIConfig object which contains settings for this plugin.
+     */
+    public Config getSettings() {
+        if (this.config == null) {
+            // Loads the configuration
+            try {
+                this.config = new CommentedConfig(this);
+                Logging.debug("Loaded config file!");
+            } catch (Exception e) {  // Catch errors loading the config file and exit out if found.
+                Logging.severe("Error loading config file!");
+                Logging.severe(e.getMessage());
+                Bukkit.getPluginManager().disablePlugin(this);
+                return null;
+            }
+        }
+        return this.config;
+    }
+
+    /**
+     * @return the MVIData object which contains data for this plugin.
+     */
+    public Data getData() {
+        if (this.data == null) {
+            // Loads the data
+            try {
+                this.data = new YamlData(this);
+            } catch (IOException e) {  // Catch errors loading the language file and exit out if found.
+                Logging.severe("Error loading data file!");
+                Logging.severe(e.getMessage());
+                Bukkit.getPluginManager().disablePlugin(this);
+                return null;
+            }
+        }
+        return this.data;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Messager getMessager() {
+        return messager;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void setMessager(Messager messager) {
+        if (messager == null)
+            throw new IllegalArgumentException("The new messager can't be null!");
+
+        this.messager = messager;
     }
 }

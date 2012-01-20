@@ -7,10 +7,8 @@
 # Use %1, %2, %3, to indicate position of variables.. This is of course limited
 # to specific message
 
-generic:
-  error:
-  - 'error'
-  info:
-  - 'info'
-  success:
-  - 'success'
+TEST_STRING: 'a test-string from the resource'
+
+# Reload Command
+RELOAD_COMPLETE:
+- '&b===[ Reload Complete! ]==='

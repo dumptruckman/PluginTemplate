@@ -1,107 +1,49 @@
 package com.dumptruckman.plugintemplate.config;
 
-import com.dumptruckman.plugintemplate.TemplatePlugin;
-
-import java.io.File;
-import java.io.IOException;
+import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * @author dumptruckman
+ * Interface for interacting with the config of this plugin.
  */
-public enum Config {
-    LANGUAGE_FILE_NAME("settings.language_file", "english.yml", "# This is the language file you wish to use."),
-    DEBUG_MODE("settings.debug_mode.enable", false, "# Enables debug mode."),
-    DATA_SAVE_PERIOD("settings.data.save_every", 300, "# This is often plugin data is written to the disk."),
-    ;
-
-    private String path;
-    private Object def;
-    private String[] comments;
-
-    Config(String path, Object def, String...comments) {
-        this.path = path;
-        this.def = def;
-        this.comments = comments;
-    }
-
-    public final Boolean getBoolean() {
-        return config.getConfig().getBoolean(path, (Boolean)def);
-    }
-
-    public final Integer getInt() {
-        return config.getConfig().getInt(path, (Integer)def);
-    }
-
-    public final String getString() {
-        return config.getConfig().getString(path, (String)def);
-    }
+public interface Config {
 
     /**
-     * Retrieves the path for a config option
-     * @return The path for a config option
+     * Retrieves the underlying FileConfiguration object for direct modification.
+     *
+     * @return The underlying FileConfiguration object.
      */
-    private String getPath() {
-        return path;
-    }
+    FileConfiguration getConfig();
 
     /**
-     * Retrieves the default value for a config path
-     * @return The default value for a config path
+     * Convenience method for saving the config to disk.
      */
-    private Object getDefault() {
-        return def;
-    }
+    void save();
 
     /**
-     * Retrieves the comment for a config path
-     * @return The comments for a config path
+     * Checks to see if debug mode is set in the config.
+     *
+     * @return True if debug mode is enabled.
      */
-    private String[] getComments() {
-        if (comments != null) {
-            return comments;
-        }
-
-        String[] comments = new String[1];
-        comments[0] = "";
-        return comments;
-    }
-
-    private static CommentedConfiguration config;
+    boolean isDebugging();
 
     /**
-     * Loads the configuration data into memory and sets defaults
-     * @throws IOException
+     * Retrieves the locale string from the config.
+     *
+     * @return The locale string.
      */
-    public static void load() throws IOException {
-        // Make the data folders
-        TemplatePlugin.getInstance().getDataFolder().mkdirs();
-
-        // Check if the config file exists.  If not, create it.
-        File configFile = new File(TemplatePlugin.getInstance().getDataFolder(), "config.yml");
-        if (!configFile.exists()) {
-            configFile.createNewFile();
-        }
-
-        // Load the configuration file into memory
-        config = new CommentedConfiguration(configFile);
-        config.load();
-
-        // Sets defaults config values
-        setDefaults();
-
-        // Saves the configuration from memory to file
-        config.save();
-    }
+    String getLocale();
 
     /**
-     * Loads default settings for any missing config values
+     * Tells whether this is the first time the plugin has run as set by a config flag.
+     *
+     * @return True if first_run is set to true in config.
      */
-    private static void setDefaults() {
-        for (Config path : Config.values()) {
-            config.addComment(path.getPath(), path.getComments());
-            if (config.getConfig().getString(path.getPath()) == null) {
-                config.getConfig().set(path.getPath(), path.getDefault());
-            }
-        }
-    }
+    boolean isFirstRun();
+
+    /**
+     * Sets the first_run flag in the config so that the plugin no longer thinks it is the first run.
+     *
+     * @param firstRun What to set the flag to in the config.
+     */
+    void setFirstRun(boolean firstRun);
 }

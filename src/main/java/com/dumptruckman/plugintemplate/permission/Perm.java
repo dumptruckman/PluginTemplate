@@ -7,30 +7,61 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @author dumptruckman
+ * Permission Enum for easily keeping track of permissions related to this plugin.
  */
 public enum Perm {
-    EXAMPLE (new Permission("TemplatePlugin.example", PermissionDefault.OP)),
-    ;
+    /**
+     * Permission for /mvi info.
+     */
+    EXAMPLE(new Permission("example.node", "Example description",
+            PermissionDefault.OP));
 
-    private Permission perm;
+    private Permission perm = null;
+    private String permNode = "";
 
     Perm(Permission perm) {
         this.perm = perm;
     }
 
-    private Permission getPerm() {
-        return perm;
+    Perm(String permNode) {
+        this.permNode = permNode;
     }
 
+    /**
+     * @return the Permission.
+     */
+    public Permission getPerm() {
+        return this.perm;
+    }
+
+    /**
+     * @return the Permission node string.
+     */
+    public String getPermNode() {
+        return this.permNode;
+    }
+
+    /**
+     * Checks if the sender has the node in question.
+     *
+     * @param sender CommandSender to check permission for.
+     * @return True if sender has the permission.
+     */
     public boolean has(CommandSender sender) {
         return sender.hasPermission(perm);
     }
 
-    public static void load(JavaPlugin plugin) {
+    /**
+     * Registers all Permission to the plugin.
+     *
+     * @param plugin Plugin to register permissions to.
+     */
+    public static void register(JavaPlugin plugin) {
         PluginManager pm = plugin.getServer().getPluginManager();
         for (Perm perm : Perm.values()) {
-            pm.addPermission(perm.getPerm());
+            if (perm.getPerm() != null) {
+                pm.addPermission(perm.getPerm());
+            }
         }
     }
 }

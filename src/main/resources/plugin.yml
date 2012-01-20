@@ -1,4 +1,4 @@
 name: PluginTemplate
 main: com.dumptruckman.plugintemplate.TemplatePlugin
-version: b${build.number}
+version: maven-version-number
 author: dumptruckman
