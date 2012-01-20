@@ -1,5 +1,6 @@
 package com.dumptruckman.plugintemplate.locale;
 
+import com.dumptruckman.plugintemplate.util.Font;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -68,7 +69,7 @@ public class SimpleMessager extends SimpleMessageProvider implements Messager, M
      */
     @Override
     public void sendMessage(CommandSender player, String message) {
-        List<String> messages = com.onarandombox.multiverseinventories.util.Font.splitString(message);
+        List<String> messages = Font.splitString(message);
         sendMessages(player, messages);
     }
 

@@ -124,7 +124,7 @@ and adjust the build number accordingly -->
                 <version>2.8</version>
                 <configuration>
                     <enableRulesSummary>true</enableRulesSummary>
-                    <configLocation>${project.basedir}/config/mv_checks.xml</configLocation>
+                    <configLocation>${project.basedir}/config/checks.xml</configLocation>
                 </configuration>
             </plugin>
         </plugins>

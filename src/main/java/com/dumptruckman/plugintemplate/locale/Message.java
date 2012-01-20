@@ -11,6 +11,12 @@ public enum Message {
     // BEGIN CHECKSTYLE-SUPPRESSION: Javadoc
     TEST_STRING("a test-string from the enum"),
 
+    // Generic Messages
+    GENERIC_ERROR("[Error]"),
+    GENERIC_SUCCESS("[Success]"),
+    GENERIC_INFO("[Info]"),
+    GENERIC_HELP("[Help]"),
+
     // Reload Command
     RELOAD_COMPLETE("&b===[ Reload Complete! ]===");
 
