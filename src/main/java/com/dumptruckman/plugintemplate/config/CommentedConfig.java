@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.io.File;
 
 /**
- * Implementation of MVIConfig.
+ * Commented Yaml implementation of Config.
  */
 public class CommentedConfig implements Config {
 
@@ -19,7 +19,7 @@ public class CommentedConfig implements Config {
         /**
          * Add a comment to the top of file.
          */
-        SETTINGS("settings", null, "# ===[ Multiverse Inventories Config ]==="),
+        SETTINGS("settings", null, "# ===[ TemplatePlugin Config ]==="),
         /**
          * Locale name config path, default and comments.
          */

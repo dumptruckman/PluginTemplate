@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public enum Perm {
     /**
-     * Permission for /mvi info.
+     * Example permission node.
      */
     EXAMPLE(new Permission("example.node", "Example description",
             PermissionDefault.OP));

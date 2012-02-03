@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An enum containing all messages/strings used by Multiverse.
+ * An enum containing all messages/strings used by TemplatePlugin.
  */
 public enum Message {
     // BEGIN CHECKSTYLE-SUPPRESSION: Javadoc

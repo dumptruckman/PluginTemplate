@@ -13,7 +13,7 @@ public class Logging {
 
     // BEGIN CHECKSTYLE-SUPPRESSION: Name
     private static Logger LOG = Logger.getLogger("Minecraft");
-    private static String NAME = "Multiverse-Profiles";
+    private static String NAME = "TemplatePlugin";
     private static String VERSION = "v.???";
     private static boolean DEBUG_MODE = false;
     // END CHECKSTYLE-SUPPRESSION: Name

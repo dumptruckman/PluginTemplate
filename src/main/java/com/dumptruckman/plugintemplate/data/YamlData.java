@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Implementation of MVIData.
+ * Yaml implementation of Data.
  */
 public class YamlData implements Data {
 

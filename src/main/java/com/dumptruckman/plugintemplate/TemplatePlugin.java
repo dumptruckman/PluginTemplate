@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 /**
- * @author dumptruckman
+ * Main plugin class for dumptruckman's Plugin Template.
  */
 public class TemplatePlugin extends JavaPlugin implements Messaging {
 
@@ -68,7 +68,8 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
         this.config = null;
         // Set debug mode from config
         Logging.setDebugMode(this.getSettings().isDebugging());
-        // Create initial World Group for first run IF NO GROUPS EXIST
+
+        // Do any import first run stuff here.
         if (this.getSettings().isFirstRun()) {
             Logging.info("First run!");
         }
@@ -83,7 +84,7 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
     }
 
     /**
-     * @return the MVIConfig object which contains settings for this plugin.
+     * @return the Config object which contains settings for this plugin.
      */
     public Config getSettings() {
         if (this.config == null) {
@@ -102,7 +103,7 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
     }
 
     /**
-     * @return the MVIData object which contains data for this plugin.
+     * @return the Data object which contains data for this plugin.
      */
     public Data getData() {
         if (this.data == null) {
