@@ -1,6 +1,7 @@
 package com.dumptruckman.plugintemplate;
 
 import com.dumptruckman.plugintemplate.command.DebugCommand;
+import com.dumptruckman.plugintemplate.command.ReloadCommand;
 import com.dumptruckman.plugintemplate.config.CommentedConfig;
 import com.dumptruckman.plugintemplate.config.Config;
 import com.dumptruckman.plugintemplate.data.Data;
@@ -97,6 +98,7 @@ public class PluginTemplate extends JavaPlugin implements Messaging {
 
     private void registerCommands() {
         this.commandHandler.registerCommand(new DebugCommand(this));
+        this.commandHandler.registerCommand(new ReloadCommand(this));
     }
 
     /**

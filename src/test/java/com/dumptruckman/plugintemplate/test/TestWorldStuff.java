@@ -180,7 +180,7 @@ public class TestWorldStuff {
     }
 
     @Test
-    // 
+    //
     public void testModifyGameMode() {
         // Pull a core instance from the server.
         Plugin plugin = mockServer.getPluginManager().getPlugin("Multiverse-Core");
