@@ -14,7 +14,14 @@ GENERIC_ERROR: '[Error]'
 GENERIC_SUCCESS: '[Success]'
 GENERIC_INFO: '[Info]'
 GENERIC_HELP: '[Help]'
+GENERIC_OFF: 'OFF'
 
 # Reload Command
 RELOAD_COMPLETE:
 - '&b===[ Reload Complete! ]==='
+
+# Debug Command
+INVALID_DEBUG:
+- '&fInvalid debug level.  Please use number 0-3.  &b(3 being many many messages!)'
+DEBUG_SET:
+- 'Debug mode is %1'

@@ -1,6 +1,6 @@
 package com.dumptruckman.plugintemplate.config;
 
-import com.dumptruckman.plugintemplate.TemplatePlugin;
+import com.dumptruckman.plugintemplate.PluginTemplate;
 import com.dumptruckman.plugintemplate.config.util.CommentedYamlConfiguration;
 import com.dumptruckman.plugintemplate.util.Logging;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,7 +19,7 @@ public class CommentedConfig implements Config {
         /**
          * Add a comment to the top of file.
          */
-        SETTINGS("settings", null, "# ===[ TemplatePlugin Config ]==="),
+        SETTINGS("settings", null, "# ===[ PluginTemplate Config ]==="),
         /**
          * Locale name config path, default and comments.
          */
@@ -27,11 +27,11 @@ public class CommentedConfig implements Config {
         /**
          * Debug Mode config path, default and comments.
          */
-        DEBUG_MODE("settings.debug_mode.enable", false, "# Enables debug mode."),
+        DEBUG_MODE("settings.debug_level", 0, "# 0 = off, 1-3 display debug info with increasing granularity."),
         /**
          * First Run flag config path, default and comments.
          */
-        FIRST_RUN("settings.first_run", true, "# If this is true it will generate world groups for you based on MV "
+        FIRST_RUN("settings.first_run", true, "# Will make the plugin perform tasks only done on a first run."
                 + "worlds.");
 
         private String path;
@@ -79,20 +79,20 @@ public class CommentedConfig implements Config {
     }
 
     private CommentedYamlConfiguration config;
-    private TemplatePlugin plugin;
+    private PluginTemplate plugin;
 
-    public CommentedConfig(TemplatePlugin plugin) throws Exception {
+    public CommentedConfig(PluginTemplate plugin) throws Exception {
         this.plugin = plugin;
         // Make the data folders
-        if (plugin.getDataFolder().mkdirs()) {
-            Logging.debug("Created data folder.");
+        if (this.plugin.getDataFolder().mkdirs()) {
+            Logging.fine("Created data folder.");
         }
 
         // Check if the config file exists.  If not, create it.
-        File configFile = new File(plugin.getDataFolder(), "config.yml");
+        File configFile = new File(this.plugin.getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             if (configFile.createNewFile()) {
-                Logging.debug("Created config file.");
+                Logging.fine("Created config file.");
             }
         }
 
@@ -115,7 +115,7 @@ public class CommentedConfig implements Config {
             config.addComment(path.getPath(), path.getComments());
             if (this.getConfig().get(path.getPath()) == null) {
                 if (path.getDefault() != null) {
-                    Logging.debug("Config: Defaulting '" + path.getPath() + "' to " + path.getDefault());
+                    Logging.fine("Config: Defaulting '" + path.getPath() + "' to " + path.getDefault());
                     this.getConfig().set(path.getPath(), path.getDefault());
                 }
             }
@@ -154,8 +154,17 @@ public class CommentedConfig implements Config {
      * {@inheritDoc}
      */
     @Override
-    public boolean isDebugging() {
-        return this.getBoolean(Path.DEBUG_MODE);
+    public void setGlobalDebug(int globalDebug) {
+        this.getConfig().set(Path.DEBUG_MODE.getPath(), globalDebug);
+        Logging.setDebugMode(globalDebug);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getGlobalDebug() {
+        return this.getInt(Path.DEBUG_MODE);
     }
 
     /**

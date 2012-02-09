@@ -1,5 +1,6 @@
 package com.dumptruckman.plugintemplate;
 
+import com.dumptruckman.plugintemplate.command.DebugCommand;
 import com.dumptruckman.plugintemplate.config.CommentedConfig;
 import com.dumptruckman.plugintemplate.config.Config;
 import com.dumptruckman.plugintemplate.data.Data;
@@ -8,21 +9,35 @@ import com.dumptruckman.plugintemplate.locale.Messager;
 import com.dumptruckman.plugintemplate.locale.Messaging;
 import com.dumptruckman.plugintemplate.locale.SimpleMessager;
 import com.dumptruckman.plugintemplate.permission.Perm;
+import com.dumptruckman.plugintemplate.permission.PermHandler;
 import com.dumptruckman.plugintemplate.util.Logging;
+import com.pneumaticraft.commandhandler.CommandHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 /**
  * Main plugin class for dumptruckman's Plugin Template.
  */
-public class TemplatePlugin extends JavaPlugin implements Messaging {
+public class PluginTemplate extends JavaPlugin implements Messaging {
 
     private Config config = null;
     private Data data = null;
     private Messager messager = new SimpleMessager(this);
+    private File serverFolder = new File(System.getProperty("user.dir"));
+
+    // Setup our Map for our Commands using the CommandHandler.
+    private CommandHandler commandHandler;
+
+    private PermHandler ph;
 
     /**
      * {@inheritDoc}
@@ -40,6 +55,9 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
     public final void onEnable() {
         Logging.init(this);
         Perm.register(this);
+
+        this.ph = new PermHandler();
+        this.commandHandler = new CommandHandler(this, this.ph);
 
         try {
             this.getMessager().setLocale(new Locale(this.getSettings().getLocale()));
@@ -66,8 +84,6 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
      */
     public void reloadConfig() {
         this.config = null;
-        // Set debug mode from config
-        Logging.setDebugMode(this.getSettings().isDebugging());
 
         // Do any import first run stuff here.
         if (this.getSettings().isFirstRun()) {
@@ -80,7 +96,28 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
     }
 
     private void registerCommands() {
-        // Command registering goes here.
+        this.commandHandler.registerCommand(new DebugCommand(this));
+    }
+
+    /**
+     * @return The instance of CommandHandler used by this plugin.
+     */
+    public CommandHandler getCommandHandler() {
+        return this.commandHandler;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+        if (!this.isEnabled()) {
+            sender.sendMessage("This plugin is Disabled!");
+            return true;
+        }
+        List<String> allArgs = new ArrayList<String>(Arrays.asList(args));
+        allArgs.add(0, command.getName());
+        return this.getCommandHandler().locateAndRunCommand(sender, allArgs);
     }
 
     /**
@@ -91,7 +128,7 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
             // Loads the configuration
             try {
                 this.config = new CommentedConfig(this);
-                Logging.debug("Loaded config file!");
+                Logging.fine("Loaded config file!");
             } catch (Exception e) {  // Catch errors loading the config file and exit out if found.
                 Logging.severe("Error loading config file!");
                 Logging.severe(e.getMessage());
@@ -137,5 +174,26 @@ public class TemplatePlugin extends JavaPlugin implements Messaging {
             throw new IllegalArgumentException("The new messager can't be null!");
 
         this.messager = messager;
+    }
+
+    /**
+     * Gets the server's root-folder as {@link File}.
+     *
+     * @return The server's root-folder
+     */
+    public File getServerFolder() {
+        return serverFolder;
+    }
+
+    /**
+     * Sets this server's root-folder.
+     *
+     * @param newServerFolder The new server-root
+     */
+    public void setServerFolder(File newServerFolder) {
+        if (!newServerFolder.isDirectory())
+            throw new IllegalArgumentException("That's not a folder!");
+
+        this.serverFolder = newServerFolder;
     }
 }

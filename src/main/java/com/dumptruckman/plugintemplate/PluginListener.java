@@ -7,9 +7,9 @@ import org.bukkit.event.Listener;
  */
 public class PluginListener implements Listener {
 
-    private TemplatePlugin plugin;
+    private PluginTemplate plugin;
 
-    public PluginListener(TemplatePlugin plugin) {
+    public PluginListener(PluginTemplate plugin) {
         this.plugin = plugin;
     }
 

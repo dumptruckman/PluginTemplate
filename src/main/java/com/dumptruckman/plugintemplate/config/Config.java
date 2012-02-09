@@ -20,11 +20,16 @@ public interface Config {
     void save();
 
     /**
-     * Checks to see if debug mode is set in the config.
-     *
-     * @return True if debug mode is enabled.
+     * Sets globalDebug.
+     * @param globalDebug The new value.
      */
-    boolean isDebugging();
+    void setGlobalDebug(int globalDebug);
+
+    /**
+     * Gets globalDebug.
+     * @return globalDebug.
+     */
+    int getGlobalDebug();
 
     /**
      * Retrieves the locale string from the config.

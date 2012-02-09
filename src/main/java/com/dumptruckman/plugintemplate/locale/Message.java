@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * An enum containing all messages/strings used by TemplatePlugin.
+ * An enum containing all messages/strings used by PluginTemplate.
  */
 public enum Message {
     // BEGIN CHECKSTYLE-SUPPRESSION: Javadoc
@@ -16,9 +16,14 @@ public enum Message {
     GENERIC_SUCCESS("[Success]"),
     GENERIC_INFO("[Info]"),
     GENERIC_HELP("[Help]"),
+    GENERIC_OFF("OFF"),
 
     // Reload Command
-    RELOAD_COMPLETE("&b===[ Reload Complete! ]===");
+    RELOAD_COMPLETE("&b===[ Reload Complete! ]==="),
+
+    // DebugCommand
+    INVALID_DEBUG("&fInvalid debug level.  Please use number 0-3.  &b(3 being many many messages!)"),
+    DEBUG_SET("Debug mode is %1");
 
     // BEGIN CHECKSTYLE-SUPPRESSION: Javadoc
 

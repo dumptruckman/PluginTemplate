@@ -17,7 +17,7 @@ public class YamlData implements Data {
     public YamlData(JavaPlugin plugin) throws IOException {
         // Make the data folders
         if (plugin.getDataFolder().mkdirs()) {
-            Logging.debug("Created data folder.");
+            Logging.info("Created data folder.");
         }
 
         // Check if the config file exists.  If not, create it.

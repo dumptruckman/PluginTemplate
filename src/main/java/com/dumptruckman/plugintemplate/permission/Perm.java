@@ -11,10 +11,13 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public enum Perm {
     /**
-     * Example permission node.
+     * Permission for debug command.
      */
-    EXAMPLE(new Permission("example.node", "Example description",
-            PermissionDefault.OP));
+    COMMAND_DEBUG(new Permission("plugintemplate.debug", "Spams the console a bunch.", PermissionDefault.OP)),
+    /**
+     * Permission for reload command.
+     */
+    COMMAND_RELOAD(new Permission("plugintemplate.reload", "Reloads the config file.", PermissionDefault.OP));
 
     private Permission perm = null;
     private String permNode = "";
@@ -30,14 +33,14 @@ public enum Perm {
     /**
      * @return the Permission.
      */
-    public Permission getPerm() {
+    public Permission getPermission() {
         return this.perm;
     }
 
     /**
      * @return the Permission node string.
      */
-    public String getPermNode() {
+    public String getNode() {
         return this.permNode;
     }
 
@@ -59,8 +62,8 @@ public enum Perm {
     public static void register(JavaPlugin plugin) {
         PluginManager pm = plugin.getServer().getPluginManager();
         for (Perm perm : Perm.values()) {
-            if (perm.getPerm() != null) {
-                pm.addPermission(perm.getPerm());
+            if (perm.getPermission() != null) {
+                pm.addPermission(perm.getPermission());
             }
         }
     }

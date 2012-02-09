@@ -1,4 +1,15 @@
 name: PluginTemplate
-main: com.dumptruckman.plugintemplate.TemplatePlugin
+main: com.dumptruckman.plugintemplate.PluginTemplate
 version: maven-version-number
 author: dumptruckman
+
+commands:
+  pt:
+    description: Main plugin command
+    usage: /<command>
+  ptdebug:
+    description: Main plugin command
+    usage: /<command>
+  ptd:
+    description: Main plugin command
+    usage: /<command>
